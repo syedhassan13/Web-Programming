@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Div Archery Game</title>
+
+<style>
+  body {
+    margin: 0;
+    background: skyblue;
+    font-family: Arial;
+  }
+
+  #score {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+  }
+
+  #gameArea {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    overflow: hidden;
+  }
+
+  /* Bow */
+  #bow {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    font-size: 50px;
+    transform: translateY(-50%);
+  }
+
+  /* Arrow */
+  #arrow {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    width: 60px;
+    height: 4px;
+    background: brown;
+    display: none;
+  }
+
+  /* Target */
+  #target {
+    position: absolute;
+    right: 50px;
+    top: 100px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: red;
+  }
+   #timer {
+    position: absolute;
+    top: 10px;
+    left: 30%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+  }
+   #diff_level {
+    position: absolute;
+    top: 10px;
+    left: 10%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  #gameOverScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+
+  display: none; /* hidden initially */
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  font-family: Arial, sans-serif;
+  z-index: 9999;
+}
+
+#gameOverScreen h1 {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+#gameOverScreen p {
+  font-size: 30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="score">Score: 0</div>
+
+<div id="gameArea">
+  <div id="bow">🏹</div>
+  <div id="arrow"></div>
+  <div id="target"></div>
+  <div id="timer">02:00</div>
+  <div id="diff_level">Difficulty Level: <span id="level">1</span></div>
+  <div id="gameOverScreen">
+  <h1>GAME OVER</h1>
+  <p>Your Score: <span id="finalScore">0</span></p>
+</div>
+
+</div>
+
+<script>
+  const arrow = document.getElementById("arrow");
+  const target = document.getElementById("target");
+  const scoreDisplay = document.getElementById("score");
+  const diffLevel =  document.getElementById("diff_level");
+  const levelDisplay = document.getElementById("level");
+
+
+  let difflevelSpeed = 50;
+  let diffLevelVersion = 1;
+  let score = 0;
+  let arrowMoving = false;
+  let targetDirection = 1;
+  let targetInterval;
+
+
+   diffLevel.addEventListener("click", (e) => {
+  e.stopPropagation(); 
+  increaseDifficulty();
+});
+
+
+  startTimer();
+  moveTarget();
+
+  moveArrow();
+
+ 
+
+  function resetArrow() {
+    arrowMoving = false;
+    arrow.style.display = "none";
+  }
+function moveTarget() {
+    /* Move target continuously */
+    // Stop old interval if running
+  if (targetInterval) {
+    clearInterval(targetInterval);
+  }
+
+  targetInterval = setInterval(() => {
+    let top = target.offsetTop;
+    if (top <= 0 || top >= window.innerHeight - 120) {
+      targetDirection *= -1;
+    }
+    target.style.top = top + (5 * targetDirection) + "px";
+  }, difflevelSpeed);
+
+
+}
+
+
+function startTimer() {
+     let totalTime = 120; // 2 minutes in seconds
+  const timerDisplay = document.getElementById("timer");
+
+  const timerInterval = setInterval(() => {
+    let minutes = Math.floor(totalTime / 60);
+    let seconds = totalTime % 60;
+
+    // Add leading zero if needed
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    timerDisplay.textContent = minutes + ":" + seconds;
+
+    totalTime--;
+
+    if (totalTime < 0) {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = "00:00";
+       showGameOver();
+    }
+  }, 1000);
+
+}
+
+function moveArrow(){
+     /* Shoot arrow on click */
+  document.addEventListener("click", () => {
+    if (arrowMoving) return;
+
+    arrowMoving = true;
+    arrow.style.display = "block";
+    arrow.style.left = "80px";
+    arrow.style.top = target.offsetTop + 50 + "px";
+
+    let arrowInterval = setInterval(() => {
+      let arrowLeft = arrow.offsetLeft;
+      arrow.style.left = arrowLeft + 30 + "px";
+
+      /* Collision detection */
+      if (
+        arrow.offsetLeft + arrow.offsetWidth >= target.offsetLeft &&
+        arrow.offsetTop >= target.offsetTop &&
+        arrow.offsetTop <= target.offsetTop + target.offsetHeight
+      ) {
+
+        updateScore();
+        resetArrow();
+        clearInterval(arrowInterval);
+      }
+
+      /* Arrow out of screen */
+      if (arrowLeft > window.innerWidth) {
+        resetArrow();
+        clearInterval(arrowInterval);
+      }
+    }, 20);
+  });
+}
+
+
+function updateScore() {
+     score++;
+    scoreDisplay.textContent = "Score: " + score;
+
+}
+
+
+function increaseDifficulty() {
+
+    if(diffLevelVersion == 1){
+        diffLevelVersion++;
+        difflevelSpeed = 20;
+        levelDisplay.textContent = diffLevelVersion;
+    }
+    else if(diffLevelVersion == 2){
+         diffLevelVersion++;
+        difflevelSpeed = 10;
+        levelDisplay.textContent = diffLevelVersion;
+    }
+    else{
+        diffLevelVersion =1 ;
+        difflevelSpeed = 50;
+        levelDisplay.textContent = diffLevelVersion;
+    }
+    moveTarget();
+
+
+}
+function showGameOver() {
+  document.getElementById("finalScore").textContent = score;
+  document.getElementById("gameOverScreen").style.display = "flex";
+
+
+  
+  arrow.style.display = "none";
+  target.style.display = "none";
+  scoreDisplay.style.display = "none";
+  diffLevel.style.display = "none";
+  levelDisplay.style.display = "none";
+  document.getElementById("timer").style.display = "none";
+  document.getElementById("bow").style.display ="none";
+  
+
+
+  
+
+
+
+  // Optional: stop arrow shooting
+  arrowMoving = true;
+}
+
+
+</script>
+
+</body>
+</html>
