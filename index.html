@@ -1,0 +1,265 @@
+<!DOCTYPE html> <!-- HTML5 document -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Web Dev Cheat Sheet Demo</title>
+
+    <!-- CSS SECTION -->
+    <style>
+        /* =========================
+           CSS BASICS
+        ========================= */
+
+        /* Element selector */
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Class selector */
+        .container {
+            display: flex; /* Flexbox */
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* ID selector */
+        #header {
+            background: blue;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Box Model */
+        .box {
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        /* Flexbox Layout */
+        .main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /* Position Example */
+        .absolute-box {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            padding: 5px;
+        }
+
+        /* Hover Effect */
+        button:hover {
+            background: green;
+            color: white;
+        }
+    </style>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- =========================
+     HTML STRUCTURE
+========================= -->
+
+<div class="container">
+
+    <!-- Semantic HTML -->
+    <header id="header">
+        <h1>Web Development Demo</h1>
+    </header>
+
+    <nav class="box">
+        <a href="#">Home</a> |
+        <a href="#">About</a>
+    </nav>
+
+    <section class="main box">
+
+        <!-- Image -->
+        <div>
+            <img src="https://via.placeholder.com/150" alt="Sample Image">
+        </div>
+
+        <!-- Form -->
+        <div>
+            <form id="myForm">
+                <input type="text" id="name" placeholder="Enter name">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+    </section>
+
+    <footer class="box">
+        Footer Section
+    </footer>
+
+</div>
+
+<div class="absolute-box">Position</div>
+
+<!-- =========================
+     JAVASCRIPT SECTION
+========================= -->
+
+<script>
+
+    /* =========================
+       VARIABLES
+    ========================= */
+    var a = 5;
+    let b = 10;
+    const c = 15;
+
+    /* =========================
+       FUNCTIONS
+    ========================= */
+    function add(x, y) {
+        return x + y;
+    }
+
+    console.log("Addition:", add(a, b));
+
+    /* =========================
+       CONDITIONS
+    ========================= */
+    if (a < b) {
+        console.log("a is smaller");
+    } else {
+        console.log("b is smaller");
+    }
+
+    /* =========================
+       LOOP
+    ========================= */
+    for (let i = 0; i < 3; i++) {
+        console.log("Loop:", i);
+    }
+
+    /* =========================
+       DOM MANIPULATION
+    ========================= */
+    document.getElementById("header").innerHTML = "Updated Header";
+
+    /* =========================
+       EVENTS
+    ========================= */
+    document.getElementById("myForm").onsubmit = function (e) {
+        e.preventDefault(); // prevent reload
+        let name = document.getElementById("name").value;
+        alert("Hello " + name);
+    };
+
+    /* =========================
+       SYNCHRONOUS JS
+    ========================= */
+    console.log("1");
+    console.log("2"); // executes line by line
+
+    /* =========================
+       ASYNCHRONOUS JS
+    ========================= */
+    setTimeout(function () {
+        console.log("Async after 2 sec");
+    }, 2000);
+
+    /* =========================
+       PROMISES
+    ========================= */
+    let myPromise = new Promise(function (resolve, reject) {
+        let success = true;
+
+        if (success) {
+            resolve("Promise Resolved");
+        } else {
+            reject("Promise Rejected");
+        }
+    });
+
+    myPromise
+        .then(result => console.log(result))
+        .catch(error => console.log(error));
+
+    /* =========================
+       ASYNC / AWAIT
+    ========================= */
+    async function fetchData() {
+        try {
+            let response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+            let data = await response.json();
+            console.log("Async/Await Data:", data);
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+
+    fetchData();
+
+    /* =========================
+       COOKIES
+    ========================= */
+
+    // Set cookie
+    document.cookie = "username=Ali";
+
+    // Set cookie with expiry
+    document.cookie = "age=20; expires=Fri, 31 Dec 2026 12:00:00 UTC";
+
+    // Get cookie
+    console.log("Cookies:", document.cookie);
+
+    /* =========================
+       IMAGE TO CODE IDEA
+    ========================= */
+    // Divide page into sections:
+    // header, nav, section, footer
+    // Use flexbox for layout
+    // Use classes for styling
+
+</script>
+
+<!-- =========================
+     JQUERY SECTION
+========================= -->
+
+<script>
+
+    /* Document Ready */
+    $(document).ready(function () {
+
+        // Selector
+        $("#header").css("color", "yellow");
+
+        // Event
+        $("button").click(function () {
+            console.log("Button clicked (jQuery)");
+        });
+
+        // Effects
+        $("#header").click(function () {
+            $(this).hide(); // hide
+        });
+
+        // Change HTML
+        $("footer").html("Updated Footer by jQuery");
+
+    });
+
+</script>
+
+</body>
+</html>
