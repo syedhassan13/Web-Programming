@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>Dashboard</h1>
+
+<p>Welcome <span id="username"></span></p>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+async function loadUser(){
+
+    const res = await fetch("/user");
+    const data = await res.json();
+
+    if(!data.username){
+        window.location.href="/login.html";
+    }
+
+    document.getElementById("username").innerText = data.username;
+
+}
+
+function logout(){
+
+    window.location.href="/logout";
+
+}
+
+loadUser();
+
+</script>
+
+</body>
+
+</html>

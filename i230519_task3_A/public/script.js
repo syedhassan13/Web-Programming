@@ -16,10 +16,13 @@ password:password
 
 const data = await res.json();
 
-document.getElementById("msg").innerText = data.message;
-
+if(data.success){
+    window.location.href="/dashboard";
+}else{
+    document.getElementById("msg").innerText = data.message;
 }
 
+}
 
 
 async function register(){
@@ -40,6 +43,10 @@ password:password
 
 const data = await res.json();
 
-document.getElementById("msg").innerText = data.message;
+if(data.success){
+    window.location.href="/dashboard";
+}else{
+    document.getElementById("msg").innerText = data.message;
+}
 
 }
